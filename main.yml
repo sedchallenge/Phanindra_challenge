@@ -1,4 +1,13 @@
 ---
-- include: s3.yml
-- include: cloudfront.yml
-- include: route53.yml
+galaxy_info:
+  author: "Ben Visser"
+  company: "TELUS digital"
+  description: "Because it shouldn't take more than 30 seconds to host a static site"
+  license: MIT
+  platforms:
+    - name: Ubuntu
+      versions:
+      - precise
+      - trusty
+  categories:
+    - web
