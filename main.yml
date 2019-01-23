@@ -1,13 +1,106 @@
 ---
-galaxy_info:
-  author: "Ben Visser"
-  company: "TELUS digital"
-  description: "Because it shouldn't take more than 30 seconds to host a static site"
-  license: MIT
-  platforms:
-    - name: Ubuntu
-      versions:
-      - precise
-      - trusty
-  categories:
-    - web
+s3_website_domain: ""
+s3_website_region: us-east-1 
+s3_website_s3_endpoint: "www.{{ s3_website_domain }}.s3-website-{{ s3_website_region }}.amazonaws.com"
+s3_website_directory: ""
+s3_website_index_document: index.html
+s3_website_error_document: error.html
+s3_website_ns_servers_enabled: no
+s3_website_ns_servers: []
+s3_wesbite_bucket_policy: | 
+  {
+    "Statement": [
+      {
+        "Action": [
+          "s3:GetObject"
+        ],
+        "Effect": "Allow",
+        "Resource": "arn:aws:s3:::www.{{ s3_website_domain }}/*",
+        "Principal": "*"
+      }
+    ]
+  }
+s3_website_cloudfront_distribution: |
+  {
+    "Comment": "{{ s3_website_domain }}", 
+    "CacheBehaviors": {
+      "Quantity": 0
+    }, 
+    "Logging": {
+      "Bucket": "", 
+      "Prefix": "", 
+      "Enabled": false, 
+      "IncludeCookies": false
+    }, 
+    "Origins": {
+      "Items": [
+        {
+          "CustomOriginConfig": {
+            "OriginProtocolPolicy": "match-viewer", 
+            "HTTPPort": 80, 
+            "HTTPSPort": 443
+          }, 
+          "Id": "www.{{ s3_website_domain }}.amazonaws.com-S3-origin", 
+          "DomainName": "{{ s3_website_s3_endpoint }}"
+        }
+      ], 
+      "Quantity": 1
+    }, 
+    "DefaultRootObject": "index.html", 
+    "PriceClass": "PriceClass_All", 
+    "Enabled": true, 
+    "DefaultCacheBehavior": {
+      "TrustedSigners": {
+        "Enabled": false, 
+        "Quantity": 0
+      }, 
+      "TargetOriginId": "www.{{ s3_website_domain }}.amazonaws.com-S3-origin", 
+      "ViewerProtocolPolicy": "allow-all", 
+      "ForwardedValues": {
+        "Headers": {
+          "Quantity": 0
+        }, 
+        "Cookies": {
+          "Forward": "all"
+        }, 
+        "QueryString": true
+      }, 
+      "SmoothStreaming": false, 
+      "AllowedMethods": {
+        "Items": [
+          "HEAD", 
+          "GET"
+        ], 
+        "CachedMethods": {
+          "Items": [
+            "HEAD", 
+            "GET"
+          ], 
+          "Quantity": 2
+        }, 
+        "Quantity": 2
+      }, 
+      "MinTTL": 86400
+    }, 
+    "CallerReference": "{{ 100000000000000000000 | random }}", 
+    "ViewerCertificate": {
+      "CloudFrontDefaultCertificate": true, 
+      "MinimumProtocolVersion": "SSLv3"
+    }, 
+    "CustomErrorResponses": {
+      "Quantity": 0
+    }, 
+    "Restrictions": {
+      "GeoRestriction": {
+        "RestrictionType": "none", 
+        "Quantity": 0
+      }
+    }, 
+    "Aliases": {
+      "Items": [
+        "{{ s3_website_domain }}", 
+        "www.{{ s3_website_domain }}"
+      ], 
+      "Quantity": 2
+    }
+  }
