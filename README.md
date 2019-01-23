@@ -1,6 +1,4 @@
 # Phanindra_challenge
-
-
 Architecting a scalable and secure static web application in AWS and Creating and deploying the static website through Ansible configuration management tool 
 
 1. Create a S3 bucket in AWS console
@@ -62,3 +60,7 @@ Click “Next”.
 Leave the default permissions for “Set properties”.
 Click “Next”.
 Click “Upload”.
+
+
+
+
